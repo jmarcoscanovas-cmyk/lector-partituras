@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useWinkDetector } from './useWinkDetector'
 
-function Camera({ onWinkRight, onWinkLeft, onCalibrated, hidden }) {
+function Camera({ onWinkRight, onWinkLeft, onCalibrated, onRecalibrateRef, hidden }) {
   const videoRef = useRef(null)
 
   useEffect(() => {
@@ -18,7 +18,11 @@ function Camera({ onWinkRight, onWinkLeft, onCalibrated, hidden }) {
     startCamera()
   }, [])
 
-  useWinkDetector(videoRef, onWinkRight, onWinkLeft, onCalibrated)
+  const { recalibrate } = useWinkDetector(videoRef, onWinkRight, onWinkLeft, onCalibrated)
+
+  useEffect(() => {
+    if (onRecalibrateRef) onRecalibrateRef.current = recalibrate
+  }, [recalibrate])
 
   return (
     <video

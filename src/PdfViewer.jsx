@@ -15,6 +15,7 @@ function PdfViewer() {
   const [calibrated, setCalibrated] = useState(false)
   const [concertMode, setConcertMode] = useState(false)
   const canvasRef = useRef(null)
+  const recalibrateRef = useRef(null)
 
   async function handleFileChange(e) {
     const file = e.target.files[0]
@@ -47,6 +48,11 @@ function PdfViewer() {
 
   function prevPage() {
     setCurrentPage(p => p > 1 ? p - 1 : p)
+  }
+
+  function handleRecalibrate() {
+    setCalibrated(false)
+    if (recalibrateRef.current) recalibrateRef.current()
   }
 
   if (!pdf) {
@@ -111,7 +117,15 @@ function PdfViewer() {
         </div>
       )}
 
-      <div style={{ flex: 1, overflow: 'hidden', position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center', background: '#000' }}>
+      <div style={{
+        flex: 1,
+        overflow: 'hidden',
+        position: 'relative',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: '#000'
+      }}>
         {!concertMode && (
           <span style={{
             position: 'absolute', top: '10px', left: '50%', transform: 'translateX(-50%)',
@@ -127,6 +141,7 @@ function PdfViewer() {
             onWinkRight={nextPage}
             onWinkLeft={prevPage}
             onCalibrated={() => setCalibrated(true)}
+            onRecalibrateRef={recalibrateRef}
             hidden={concertMode}
           />
         </div>
@@ -164,11 +179,19 @@ function PdfViewer() {
             color: '#ccc', fontSize: '14px', cursor: 'pointer'
           }}>← Anterior</button>
 
-          <button onClick={() => setConcertMode(true)} style={{
-            background: '#1a1a2e', border: '0.5px solid #534AB7',
-            borderRadius: '8px', padding: '8px 14px',
-            color: '#AFA9EC', fontSize: '13px', cursor: 'pointer'
-          }}>Modo concierto</button>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            <button onClick={handleRecalibrate} style={{
+              background: '#1a1a2e', border: '0.5px solid #534AB7',
+              borderRadius: '8px', padding: '8px 14px',
+              color: '#AFA9EC', fontSize: '13px', cursor: 'pointer'
+            }}>Recalibrar</button>
+
+            <button onClick={() => setConcertMode(true)} style={{
+              background: '#1a1a2e', border: '0.5px solid #534AB7',
+              borderRadius: '8px', padding: '8px 14px',
+              color: '#AFA9EC', fontSize: '13px', cursor: 'pointer'
+            }}>Modo concierto</button>
+          </div>
 
           <button onClick={nextPage} style={{
             background: '#222', border: '0.5px solid #444',

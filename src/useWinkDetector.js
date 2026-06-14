@@ -19,28 +19,34 @@ function mean(arr) {
 }
 
 export function useWinkDetector(videoRef, onWinkRight, onWinkLeft, onCalibrated) {
-  const detectorRef   = useRef(null)
-  const baselineLRef  = useRef(null)
-  const baselineRRef  = useRef(null)
-  const leftHistRef   = useRef([])
-  const rightHistRef  = useRef([])
-  const lockRightRef  = useRef(false)
-  const lockLeftRef   = useRef(false)
-  const calibDataL    = useRef([])
-  const calibDataR    = useRef([])
-  const calibDoneRef  = useRef(false)
-  const calibStartRef = useRef(null)
+  const detectorRef    = useRef(null)
+  const baselineLRef   = useRef(null)
+  const baselineRRef   = useRef(null)
+  const leftHistRef    = useRef([])
+  const rightHistRef   = useRef([])
+  const lockRightRef   = useRef(false)
+  const lockLeftRef    = useRef(false)
+  const calibDataL     = useRef([])
+  const calibDataR     = useRef([])
+  const calibDoneRef   = useRef(false)
+  const calibStartRef  = useRef(null)
   const onWinkRightRef = useRef(onWinkRight)
   const onWinkLeftRef  = useRef(onWinkLeft)
+  const onCalibratedRef = useRef(onCalibrated)
   const CALIB_TIME = 2000
 
-  useEffect(() => {
-    onWinkRightRef.current = onWinkRight
-  }, [onWinkRight])
+  useEffect(() => { onWinkRightRef.current = onWinkRight }, [onWinkRight])
+  useEffect(() => { onWinkLeftRef.current = onWinkLeft }, [onWinkLeft])
+  useEffect(() => { onCalibratedRef.current = onCalibrated }, [onCalibrated])
 
-  useEffect(() => {
-    onWinkLeftRef.current = onWinkLeft
-  }, [onWinkLeft])
+  function recalibrate() {
+    calibDataL.current   = []
+    calibDataR.current   = []
+    calibDoneRef.current = false
+    calibStartRef.current = performance.now()
+    leftHistRef.current  = []
+    rightHistRef.current = []
+  }
 
   useEffect(() => {
     let animFrame
@@ -97,8 +103,7 @@ export function useWinkDetector(videoRef, onWinkRight, onWinkLeft, onCalibrated)
             baselineLRef.current = mean(calibDataL.current)
             baselineRRef.current = mean(calibDataR.current)
             calibDoneRef.current = true
-            if (onCalibrated) onCalibrated()
-            console.log(`Calibrado: EAR_L=${baselineLRef.current.toFixed(3)} EAR_R=${baselineRRef.current.toFixed(3)}`)
+            if (onCalibratedRef.current) onCalibratedRef.current()
           }
         } else {
           leftHistRef.current  = [...leftHistRef.current.slice(-(SMOOTH_WINDOW - 1)), earL]
@@ -138,4 +143,6 @@ export function useWinkDetector(videoRef, onWinkRight, onWinkLeft, onCalibrated)
     init()
     return () => cancelAnimationFrame(animFrame)
   }, [])
+
+  return { recalibrate }
 }
