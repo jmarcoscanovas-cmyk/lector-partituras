@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from 'react'
 import * as pdfjsLib from 'pdfjs-dist'
 import Thumbnails from './Thumbnails'
 import Camera from './Camera'
+import { useZoom } from './useZoom'
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
   'pdfjs-dist/build/pdf.worker.min.mjs',
@@ -15,7 +16,10 @@ function PdfViewer() {
   const [calibrated, setCalibrated] = useState(false)
   const [concertMode, setConcertMode] = useState(false)
   const canvasRef = useRef(null)
+  const zoomRef = useRef(null)
   const recalibrateRef = useRef(null)
+
+  useZoom(zoomRef)
 
   async function handleFileChange(e) {
     const file = e.target.files[0]
@@ -135,7 +139,20 @@ function PdfViewer() {
             Página {currentPage} / {numPages}
           </span>
         )}
-        <canvas ref={canvasRef} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
+
+        <div
+          ref={zoomRef}
+          style={{
+            transformOrigin: 'center center',
+            transition: 'transform 0.05s',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          <canvas ref={canvasRef} style={{ maxWidth: '100%', maxHeight: '100%' }} />
+        </div>
+
         <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
           <Camera
             onWinkRight={nextPage}
