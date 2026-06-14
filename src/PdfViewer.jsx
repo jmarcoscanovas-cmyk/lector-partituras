@@ -179,17 +179,19 @@ function PdfViewer() {
             color: '#ccc', fontSize: '14px', cursor: 'pointer'
           }}>← Anterior</button>
 
-          <div style={{ display: 'flex', gap: '8px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
             <button onClick={handleRecalibrate} style={{
               background: '#1a1a2e', border: '0.5px solid #534AB7',
-              borderRadius: '8px', padding: '8px 14px',
-              color: '#AFA9EC', fontSize: '13px', cursor: 'pointer'
+              borderRadius: '8px', padding: '6px 14px',
+              color: '#AFA9EC', fontSize: '12px', cursor: 'pointer',
+              whiteSpace: 'nowrap'
             }}>Recalibrar</button>
 
             <button onClick={() => setConcertMode(true)} style={{
               background: '#1a1a2e', border: '0.5px solid #534AB7',
-              borderRadius: '8px', padding: '8px 14px',
-              color: '#AFA9EC', fontSize: '13px', cursor: 'pointer'
+              borderRadius: '8px', padding: '6px 14px',
+              color: '#AFA9EC', fontSize: '12px', cursor: 'pointer',
+              whiteSpace: 'nowrap'
             }}>Modo concierto</button>
           </div>
 
