@@ -135,9 +135,7 @@ function PdfViewer() {
             Página {currentPage} / {numPages}
           </span>
         )}
-
-        <canvas ref={canvasRef} style={{ maxWidth: '100%', maxHeight: '100%' }} />
-
+        <canvas ref={canvasRef} style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }} />
         <div style={{ position: 'absolute', top: '10px', right: '10px' }}>
           <Camera
             onWinkRight={nextPage}
